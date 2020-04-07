@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Bandit Algorithms - JigglypuffRL</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">JigglypuffRL</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../../.." class="nav-link">JigglypuffRL</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../../../installation/" class="nav-link">Installation</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Classicalrl <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Bandit</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="./" class="dropdown-item active">Bandit Algorithms</a>
+</li>
+    </ul>
+  </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../../installation/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#bandit-algorithms" class="nav-link">Bandit Algorithms</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="bandit-algorithms">Bandit Algorithms</h1>
+<p>JigglypuffRL currently supports multi-armed Bandits with the every arm modeled as:<br>
+- Bernoulli/Beta Random Variable <br>
+- Gaussian Random Variable <br></p>
+<p>There current list of supported Bandit Algorithms are:<br>
+1. Epsilon Greedy<br>
+2. Upper Confidence Bound<br>
+3. Bayesian Upper Confidence Bound (only in Bernoulli/Beta RV Formulation)<br>
+4. Thompson Sampling (only in Bernoulli/Beta RV formulation)<br>
+5. Softmax Action Selection (only in Gaussian RV formulation)<br></p>
+<p>An example of the usage is as follows:</p>
+<h4 id="import">Import</h4>
+<pre><code>from jigglypuffRL import EpsGreedyGaussianBandit, EpsGreedyBernoulliBandit, \
+UCBGaussianBandit, UCBBernoulliBandit, BayesianUCBBernoulliBandit, \
+ThompsonSampling, SoftmaxAction Selection
+</code></pre>
+
+<h4 id="initialize-models">Initialize Models</h4>
+<pre><code>epsGreedyBandit = EpsGreedyGaussianBandit(bandits=1, arms=10, eps=0.05)
+ucbBandit = UCBGaussianBandit(bandits=1, arms=10)
+softmaxBandit = SoftmaxActionSelection(bandits=1, arms=10)
+</code></pre>
+
+<h4 id="learn">Learn</h4>
+<pre><code>epsGreedyBandit.learn(n_timesteps=1000)
+ucbBandit.learn(1000)
+softmaxBandit.learn(1000)
+</code></pre>
+
+<h4 id="plot">Plot</h4>
+<pre><code>import matplotlib.pyplot as plt
+
+plt.plot(epsGreedyBandit.regrets, label=&quot;eps greedy&quot;)
+plt.plot(ucbBandit.regrets, label=&quot;ucb&quot;)
+plt.plot(softmaxBandit.regrets, label=&quot;softmax&quot;)
+plt.legend()
+plt.savefig(&quot;GuassianBanditsRegret.png&quot;)
+plt.cla()
+</code></pre>
+
+<h4 id="initialize-bernoullibeta-models">Initialize Bernoulli/Beta models</h4>
+<pre><code>epsbernoulli = EpsGreedyBernoulliBandit(bandits=1, arms=10, eps=0.05)
+ucbbernoulli = UCBBernoulliBandit(bandits=1, arms=10)
+thsampling = ThompsonSampling(bandits=1, arms=10, a=1, b=1)
+bayesianbandit = BayesianUCBBernoulliBandit(bandits=1, arms=10, a=1, b=1, c=3)
+</code></pre>
+
+<h4 id="learn_1">Learn</h4>
+<pre><code>epsbernoulli.learn(1000)
+ucbbernoulli.learn(1000)
+thsampling.learn(1000)
+bayesianbandit.learn(1000)
+</code></pre>
+
+<h4 id="plot_1">Plot</h4>
+<pre><code>plt.plot(epsbernoulli.regrets, label=&quot;eps&quot;)
+plt.plot(ucbbernoulli.regrets, label=&quot;ucb&quot;)
+plt.plot(bayesianbandit.regrets, label=&quot;Bayesian UCB&quot;)
+plt.plot(thsampling.regrets, label=&quot;Thompson Sampling&quot;)
+plt.legend()
+plt.savefig(&quot;BernoulliBanditsRegret.png&quot;)
+</code></pre>
+
+<p>This creates the following plots:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Gaussian Regrets</th>
+<th align="center">Bernoulli Regrets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img alt="" src="../../../img/GuassianBanditsRegret.png" /></td>
+<td align="center"><img alt="" src="../../../img/BernoulliBanditsRegret.png" /></td>
+</tr>
+</tbody>
+</table></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
